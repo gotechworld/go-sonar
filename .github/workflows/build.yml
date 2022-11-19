@@ -46,27 +46,9 @@ jobs:
     steps:
       - run: echo 'Should run integration tests'
       
-  zap_scan:
-    runs-on: ubuntu-latest
-    needs: integrationTest
-    name: Run DAST scan on the web application
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: main
-      - name: ZAP Scan
-        uses: zaproxy/action-baseline@v0.7.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          docker_name: 'owasp/zap2docker-stable'
-          target: 'https://www.volantetech.com'
-          rules_file_name: '.zap/rules.tsv'
-          cmd_options: '-a'
-          
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
-    needs: zap_scan
+    needs:  integrationTest
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
